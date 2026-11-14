@@ -147,6 +147,67 @@ ol
 ul
 	{margin-bottom:0cm;}
 -->
+/* --- Тема оформления --- */
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --comment-bg: #f9f9f9;
+    --comment-border: #00115C;
+    --summary-color: #00115C;
+    --details-color: #555;
+    --link: #0563c1;
+    --link-visited: #954f72;
+}
+
+html.dark {
+    --bg: #121212;
+    --text: #e6e6e6;
+    --comment-bg: #1e1e1e;
+    --comment-border: #7aa2ff;
+    --summary-color: #9db8ff;
+    --details-color: #b0b0b0;
+    --link: #6ea8ff;
+    --link-visited: #c792ea;
+}
+
+/* Применяем переменные */
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a:link, span.MsoHyperlink { color: var(--link); }
+a:visited, span.MsoHyperlinkFollowed { color: var(--link-visited); }
+
+details { color: var(--details-color); }
+details summary {
+    color: var(--summary-color);
+    cursor: pointer;
+}
+details > div {
+    background-color: var(--comment-bg) !important;
+    border-left-color: var(--comment-border) !important;
+}
+
+/* Кнопка */
+#theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--comment-border);
+    background: var(--comment-bg);
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s, background-color 0.3s;
+}
+#theme-toggle:hover { transform: scale(1.08); }
 </style>
 
 </head>
@@ -155,6 +216,10 @@ ul
 word-wrap:break-word'>
 
 <div class=WordSection1>
+
+<button id="theme-toggle" aria-label="Переключить ночной режим" title="Ночной режим">
+    🌙
+</button>
 
 <p style="text-align: justify;">Домашние задачи</p>
 
@@ -166,7 +231,7 @@ word-wrap:break-word'>
 </p>
 <!-- Блок с комментарием cursor: pointer; font-weight: bold;-->
 <details style="margin-left: 28pt; margin-bottom: 6pt; color: #555;">
-    <summary style="color: #00115C; cursor: pointer;">Комментарий</summary>
+    <summary style="cursor: pointer;">Комментарий</summary>
     <div style="margin-top: 2pt; background-color: #f9f9f9; padding: 8pt; border-left: 3px solid #00115C;">
         Когда пишут о расщеплении спин-орбитального взаимодействия, то имеют в виду переход от термов к мультиплетам.
     </div>
@@ -176,12 +241,32 @@ word-wrap:break-word'>
 </p>
 <!-- Блок с комментарием -->
 <details style="margin-left: 28pt; margin-bottom: 6pt; color: #555;">
-    <summary style="color: #00115C; cursor: pointer">Комментарий</summary>
+    <summary style="cursor: pointer">Комментарий</summary>
     <div style="margin-top: 2pt; background-color: #f9f9f9; padding: 8pt; border-left: 3px solid #00115C;">
        Тонкость задачи в том, чтобы найти L. Основное состояние соответствует максимальным S и L. В прямой задаче (поиск терма по конфигурации) для электронной конфигурации, например, 2<i>p<sup>2</sup></i> мы рассаживали электроны по ячейкам и складывали проекции ячеек. Тут ситуация такая же – надо понять, как будут рассажены электроны и сложить в общем виде проекции ячеек. Поможет формула алгебраической прогрессии. 
     </div>
 </details>
 </div>
+
+<script>
+(function () {
+    const toggle = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+
+    // Восстанавливаем сохранённую тему
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        root.classList.add('dark');
+        toggle.textContent = '☀️';
+    }
+
+    toggle.addEventListener('click', () => {
+        const isDark = root.classList.toggle('dark');
+        toggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+})();
+</script>
 
 </body>
 
